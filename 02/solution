@@ -12,6 +12,8 @@ class Round:
     def __init__(self, round):
         self.Red = self.Green = self.Blue = 0
         for e in round.split(","):
+            if e == "":
+                continue
             parts = e.strip().lower().split(" ")
             num = int(parts[0])
             if parts[1] == "red":
@@ -32,11 +34,24 @@ class Game:
         for round in m.group(2).split(";"):
             self.Rounds.append(Round(round))
 
-    def Valid(self):
+    def valid(self):
         for round in self.Rounds:
             if round.Red > 12 or round.Green > 13 or round.Blue > 14:
                 return False
         return True
+
+    def minimum_config(self):
+        minimum = Round("")
+
+        for round in self.Rounds:
+            if round.Red > minimum.Red:
+                minimum.Red = round.Red
+            if round.Green > minimum.Green:
+                minimum.Green = round.Green
+            if round.Blue > minimum.Blue:
+                minimum.Blue = round.Blue
+
+        return minimum.Red * minimum.Green * minimum.Blue
 
 
 if __name__ == "__main__":
@@ -44,10 +59,13 @@ if __name__ == "__main__":
         games = input_file.readlines()
 
     total = 0
+    part2_total = 0
 
     for game in games:
         g = Game(game)
-        if g.Valid():
+        if g.valid():
             total += g.ID
+        part2_total += g.minimum_config()
 
     print("Solution (part 1): {}".format(total))
+    print("Solution (part 2): {}".format(part2_total))
