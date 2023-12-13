@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+import math
+from typing import AnyStr
+
+
+def extract_calibration_value(coord: AnyStr) -> int:
+    value: int = 0
+
+    # Find the first digit by going character-by-character from the beginning
+    for c in coord:
+        if 0x30 <= ord(c) <= 0x39:
+            value = int(c) * 10
+            break
+
+    for c in reversed(coord):
+        if 0x30 <= ord(c) <= 0x39:
+            value += int(c)
+            break
+
+    return value
+
+
+if __name__ == "__main__":
+    with open("input.txt") as input_file:
+        coordinates = input_file.readlines()
+
+    running_total: int = 0
+
+    for coordinate in coordinates:
+        running_total += extract_calibration_value(coordinate)
+
+    print("Summed calibration value: {}".format(running_total))
