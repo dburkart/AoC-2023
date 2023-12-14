@@ -57,9 +57,17 @@ if __name__ == "__main__":
 
         part_numbers_by_row.append(part_numbers)
 
+    # Total for part 1
+    total = 0
+    # Total for part 2
+    total2 = 0
+
     for row, line in enumerate(lines):
         for column, ch in enumerate(line):
             if ch in symbols:
+                count = 0
+                adjacent_pns = []
+
                 top = Range(Coord(row-1, column-1), Coord(row-1, column+1))
                 middle = Range(Coord(row, column-1), Coord(row, column+1))
                 bottom = Range(Coord(row+1, column-1), Coord(row+1, column+1))
@@ -67,18 +75,26 @@ if __name__ == "__main__":
                 if row - 1 >= 0:
                     for pn in part_numbers_by_row[row-1]:
                         if pn.range.overlaps(top):
+                            adjacent_pns.append(pn)
                             pn.adjacent = True
+                            count += 1
 
                 for pn in part_numbers_by_row[row]:
                     if pn.range.overlaps(middle):
+                        adjacent_pns.append(pn)
                         pn.adjacent = True
+                        count += 1
 
                 if row + 1 < len(lines):
                     for pn in part_numbers_by_row[row+1]:
                         if pn.range.overlaps(bottom):
+                            adjacent_pns.append(pn)
                             pn.adjacent = True
+                            count += 1
 
-    total = 0
+                # We're a gear ratio
+                if count == 2:
+                    total2 += adjacent_pns[0].number * adjacent_pns[1].number
 
     for row in part_numbers_by_row:
         for pn in row:
@@ -86,3 +102,4 @@ if __name__ == "__main__":
                 total += pn.number
 
     print("Solution (part 1): {}".format(total))
+    print("Solution (part 2): {}".format(total2))
