@@ -10,10 +10,7 @@ def numbers(line):
     return n
 
 
-if __name__ == "__main__":
-    with open("input.txt") as input_file:
-        lines = input_file.readlines()
-
+def part1(lines):
     total = 0
 
     for line in lines:
@@ -23,10 +20,35 @@ if __name__ == "__main__":
         winning_numbers = numbers(winning)
         our_numbers = numbers(card)
 
-        print(our_numbers)
-
         intersection = winning_numbers & our_numbers
         if len(intersection) > 0:
             total += 2 ** (len(intersection) - 1)
 
     print("Solution (part 1):", total)
+
+
+def part2(lines):
+    copies = [1] * len(lines)
+
+    for idx, line in enumerate(lines):
+        _, sets = line.split(":")
+        winning, card = sets.split("|")
+
+        winning_numbers = numbers(winning)
+        our_numbers = numbers(card)
+
+        intersection = winning_numbers & our_numbers
+        if len(intersection) > 0:
+            x = len(intersection)
+
+            for idy in range(x):
+                copies[idy + idx + 1] += copies[idx]
+    print("Solution (part 2):", sum(copies))
+
+
+if __name__ == "__main__":
+    with open("input.txt") as input_file:
+        lines = input_file.readlines()
+
+    part1(lines)
+    part2(lines)
